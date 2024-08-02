@@ -6,21 +6,6 @@ from io import BytesIO
 import time
 import requests 
 
-#----CSS-----
-# Custom CSS for lighter background
-st.markdown("""
-    <style>
-    .sidebar .stImage img {
-        background-color: #f0f0f0;
-        padding: 50px;
-        border-radius: 50px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-#---CSS OVER-----
 
 # Function to measure parameters
 def measure_parameters(image_np):
@@ -120,6 +105,12 @@ try:
     image_data = BytesIO(response.content)
     sidebar_image = Image.open(image_data)
     st.sidebar.image(sidebar_image)
+    sidebar_image_html = f'''
+    <div style="background-color: #f0f0f0; padding: 10px; border-radius: 10px;">
+        <img src="data:image/jpeg;base64,{response.content.decode('latin1')}" alt="Sidebar Image" style="display: block; margin-left: auto; margin-right: auto;">
+    </div>
+    '''
+    st.sidebar.markdown(sidebar_image_html, unsafe_allow_html=True)
 except (requests.exceptions.RequestException, UnidentifiedImageError) as e:
     st.sidebar.error(f"Failed to load image from GitHub: {e}")
 
