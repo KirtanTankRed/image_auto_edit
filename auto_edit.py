@@ -129,4 +129,4 @@ if st.session_state['original_image'] and st.session_state['enhanced_image']:
         st.image(st.session_state['enhanced_image'], caption='Enhanced Image with HDR and Denoising', use_column_width=True)
 
     # Popup reminder to clear images
-    st.sidebar.warning('Remember to clear the images after reviewing to save memory.')
+    st.sidebar.warning('Remember to clear the images after reviewing to manage memory, failing to do so can risk to insufficient memory!')
