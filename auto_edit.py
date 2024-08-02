@@ -95,6 +95,7 @@ st.title('Adaptive Image Enhancement with HDR and Denoising')
 st.write('Upload an image to enhance it dynamically with HDR and slight denoising.')
 
 # Sidebar for clearing images
+st.siderbar.header('Side Panel')
 if st.sidebar.button('Clear Images'):
     st.session_state['original_image'] = None
     st.session_state['enhanced_image'] = None
