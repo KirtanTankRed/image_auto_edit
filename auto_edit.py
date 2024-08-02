@@ -95,7 +95,7 @@ st.title('Smart Adaptive Image Enhancer')
 st.header('Upload an image to start enhancing!')
 
 # Sidebar for clearing images
-st.sidebar.image('red_logo.png')
+st.sidebar.image('https://github.com/KirtanTankRed/image_auto_edit/blob/main/source/Red_logo_transparent.png')
 st.sidebar.title('🎛️ Side Panel')
 st.sidebar.header('🗑️ Click the below button to clear images')
 if st.sidebar.button('Clear Images'):
