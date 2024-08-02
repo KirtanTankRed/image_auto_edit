@@ -4,6 +4,7 @@ import numpy as np
 import cv2
 from io import BytesIO
 import time
+import requests 
 
 # Function to measure parameters
 def measure_parameters(image_np):
