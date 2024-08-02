@@ -94,8 +94,15 @@ if 'enhanced_image' not in st.session_state:
 st.title('Smart Adaptive Image Enhancer')
 st.header('Upload an image to start enhancing!')
 
-# Sidebar for clearing images
-st.sidebar.image('https://github.com/KirtanTankRed/image_auto_edit/blob/main/source/Red_logo_transparent.png')
+# Sidebar
+
+# Fetch and display image from GitHub in sidebar
+response = requests.get('https://github.com/KirtanTankRed/image_auto_edit/blob/main/source/Red_logo_transparent.png')
+if response.status_code == 200:
+    image_data = BytesIO(response.content)
+    sidebar_image = Image.open(image_data)
+    st.sidebar.image(sidebar_image)
+    
 st.sidebar.title('🎛️ Side Panel')
 st.sidebar.header('🗑️ Click the below button to clear images')
 if st.sidebar.button('Clear Images'):
