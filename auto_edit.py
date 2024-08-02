@@ -3,6 +3,7 @@ from PIL import Image, ImageEnhance
 import numpy as np
 import cv2
 from io import BytesIO
+import time
 
 # Function to measure parameters
 def measure_parameters(image_np):
@@ -63,7 +64,7 @@ def enhance_image_adaptive(image):
     enhancer_sharpness = ImageEnhance.Sharpness(contrast_image)
     sharp_image = enhancer_sharpness.enhance(sharpness_factor)
 
-    # Convert the enhanced image back to NumPy array for HDR enhancement
+    # Convert the enhanced image back to NumPy array for further processing
     sharp_image_np = np.array(sharp_image)
 
     # Ensure the image is in BGR format for OpenCV processing
@@ -72,17 +73,32 @@ def enhance_image_adaptive(image):
     # Apply HDR enhancement
     hdr_image_np = cv2.detailEnhance(sharp_image_np, sigma_s=10, sigma_r=0.15)
 
+    # Apply slight denoising for a smooth overall image
+    denoised_image_np = cv2.fastNlMeansDenoisingColored(hdr_image_np, None, 10, 10, 7, 21)
+
     # Convert back to RGB format for displaying
-    hdr_image_np = cv2.cvtColor(hdr_image_np, cv2.COLOR_BGR2RGB)
+    denoised_image_np = cv2.cvtColor(denoised_image_np, cv2.COLOR_BGR2RGB)
 
     # Convert back to PIL Image for displaying
-    hdr_image = Image.fromarray(hdr_image_np)
+    denoised_image = Image.fromarray(denoised_image_np)
 
-    return hdr_image
+    return denoised_image
+
+# Initialize session state for image storage
+if 'original_image' not in st.session_state:
+    st.session_state['original_image'] = None
+if 'enhanced_image' not in st.session_state:
+    st.session_state['enhanced_image'] = None
 
 # Streamlit app
-st.title('Adaptive Image Enhancement with HDR')
-st.write('Upload an image to enhance it dynamically with HDR.')
+st.title('Adaptive Image Enhancement with HDR and Denoising')
+st.write('Upload an image to enhance it dynamically with HDR and slight denoising.')
+
+# Sidebar for clearing images
+if st.sidebar.button('Clear Images'):
+    st.session_state['original_image'] = None
+    st.session_state['enhanced_image'] = None
+    st.sidebar.success('Images cleared successfully.')
 
 # File upload
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
@@ -90,15 +106,32 @@ uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png
 if uploaded_file is not None:
     # Display the original image
     original_image = Image.open(uploaded_file)
+    st.session_state['original_image'] = original_image
 
-    # Enhance the image
-    enhanced_image = enhance_image_adaptive(original_image)
+    # Show a spinner while processing
+    with st.spinner('Enhancing image...'):
+        # Simulate processing time
+        time.sleep(2)
+        # Enhance the image
+        enhanced_image = enhance_image_adaptive(original_image)
+        st.session_state['enhanced_image'] = enhanced_image
 
-    # Display the original and enhanced images side by side
+# Display the original and enhanced images side by side
+if st.session_state['original_image'] and st.session_state['enhanced_image']:
     col1, col2 = st.columns(2)
 
     with col1:
-        st.image(original_image, caption='Original Image', use_column_width=True)
+        st.image(st.session_state['original_image'], caption='Original Image', use_column_width=True)
 
     with col2:
-        st.image(enhanced_image, caption='Enhanced Image with HDR', use_column_width=True)
+        st.image(st.session_state['enhanced_image'], caption='Enhanced Image with HDR and Denoising', use_column_width=True)
+
+    # Popup reminder to clear images
+    st.sidebar.warning('Remember to clear the images after reviewing to save memory.')
+
+# Provide an option to clear the images after displaying the results
+if st.session_state['original_image'] or st.session_state['enhanced_image']:
+    if st.sidebar.button('Clear Images After Viewing'):
+        st.session_state['original_image'] = None
+        st.session_state['enhanced_image'] = None
+        st.sidebar.success('Images cleared successfully.')
