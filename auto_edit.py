@@ -98,11 +98,17 @@ st.header('Upload an image to start enhancing!')
 # Sidebar
 
 # Fetch and display image from GitHub in sidebar
-response = requests.get('https://github.com/KirtanTankRed/image_auto_edit/blob/main/source/Red_logo_transparent.png')
-if response.status_code == 200:
+# response = requests.get('https://github.com/KirtanTankRed/image_auto_edit/blob/main/source/Red_logo_transparent.png')
+# ithub_image_url = ''
+try:
+    response = requests.get('https://github.com/KirtanTankRed/image_auto_edit/blob/main/source/Red_logo_transparent.png?raw=true')
+    response.raise_for_status()  # Check if the request was successful
     image_data = BytesIO(response.content)
     sidebar_image = Image.open(image_data)
-    st.sidebar.image(sidebar_image)
+    st.sidebar.image(sidebar_image, caption='Image from GitHub')
+except (requests.exceptions.RequestException, UnidentifiedImageError) as e:
+    st.sidebar.error(f"Failed to load image from GitHub: {e}")
+
     
 st.sidebar.title('🎛️ Side Panel')
 st.sidebar.header('🗑️ Click the below button to clear images')
