@@ -9,10 +9,6 @@ import requests
 #----CSS-----
 # Custom CSS for lighter background
 st.markdown("""
-    <style>
-    .stApp {
-        background-color: #f0f0f0;
-    }
     .stImage {
         background-color: #ffffff;
         padding: 10px;
