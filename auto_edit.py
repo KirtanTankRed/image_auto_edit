@@ -91,12 +91,12 @@ if 'enhanced_image' not in st.session_state:
     st.session_state['enhanced_image'] = None
 
 # Streamlit app
-st.title('Smart Adaptive Image Enhancer')
-st.write('Upload an image to start enhancing!')
+st.title('Smart Adaptive Image Enhancer 📷')
+st.header('Upload an image to start enhancing!')
 
 # Sidebar for clearing images
 st.sidebar.title('Side Panel')
-st.sidebar.header('Click the below button to clear images')
+st.sidebar.header('🗑️ Click the below button to clear images')
 if st.sidebar.button('Clear Images'):
     st.session_state['original_image'] = None
     st.session_state['enhanced_image'] = None
@@ -111,7 +111,7 @@ if uploaded_file is not None:
     st.session_state['original_image'] = original_image
 
     # Show a spinner while processing
-    with st.spinner('Applying magic to your image...'):
+    with st.spinner('Applying magic to your image 🪄'):
         # Simulate processing time
         time.sleep(2)
         # Enhance the image
@@ -123,10 +123,10 @@ if st.session_state['original_image'] and st.session_state['enhanced_image']:
     col1, col2 = st.columns(2)
 
     with col1:
-        st.image(st.session_state['original_image'], caption='Original Image', use_column_width=True)
+        st.image(st.session_state['original_image'], caption='Original Image 🖼️', use_column_width=True)
 
     with col2:
-        st.image(st.session_state['enhanced_image'], caption='Enhanced Image with HDR and Denoising', use_column_width=True)
+        st.image(st.session_state['enhanced_image'], caption='Enhanced Image with HDR and Denoising ✨', use_column_width=True)
 
     # Popup reminder to clear images
-    st.sidebar.warning('Remember to clear the images after reviewing to manage memory, failing to do so can risk to insufficient memory!')
+    st.sidebar.warning('ℹ️ Remember to clear the images after reviewing to manage memory, failing to do so can risk to insufficient memory!')
