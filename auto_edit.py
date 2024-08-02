@@ -10,10 +10,13 @@ import requests
 # Custom CSS for lighter background
 st.markdown("""
     <style>
-    .sidebar .stImage > img {
+    .sidebar .stImage img {
         background-color: #f0f0f0;
         padding: 10px;
         border-radius: 10px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
     </style>
     """, unsafe_allow_html=True)
