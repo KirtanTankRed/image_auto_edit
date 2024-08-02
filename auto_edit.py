@@ -95,7 +95,7 @@ st.title('Smart Adaptive Image Enhancer')
 st.header('Upload an image to start enhancing!')
 
 # Sidebar for clearing images
-st.sidebar.title('Side Panel')
+st.sidebar.title('🎛️ Side Panel')
 st.sidebar.header('🗑️ Click the below button to clear images')
 if st.sidebar.button('Clear Images'):
     st.session_state['original_image'] = None
