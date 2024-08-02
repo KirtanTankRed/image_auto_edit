@@ -5,7 +5,7 @@ import cv2
 from io import BytesIO
 
 # Function to measure parameters
-def measure_parameters(image_path=None, image):
+def measure_parameters( image,image_path=None):
     # image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
     brightness = np.mean(image)
     contrast = image.std()
