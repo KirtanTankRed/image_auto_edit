@@ -130,6 +130,6 @@ if st.session_state['original_image'] and st.session_state['enhanced_image']:
 
     # Popup reminder to clear images
     st.sidebar.warning('ℹ️ Remember to clear the images after reviewing to manage memory, failing to do so can risk to insufficient memory!')
-st.sidebar.warning("""⚠️ This is a prototype and is not at production capacity and offers limited trials.          
-In case of breakdown, please reboot the app or contact the developer""")
+st.sidebar.warning("""⚠️ This is a prototype for demonstration purposes and is not at production capacity which offers limited trials.          
+🔧 In case of breakdown, please reboot the app or contact the developer""")
 
