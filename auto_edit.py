@@ -12,8 +12,8 @@ st.markdown("""
     <style>
     .sidebar .stImage img {
         background-color: #f0f0f0;
-        padding: 10px;
-        border-radius: 10px;
+        padding: 50px;
+        border-radius: 50px;
         display: block;
         margin-left: auto;
         margin-right: auto;
