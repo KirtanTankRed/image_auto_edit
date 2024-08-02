@@ -111,7 +111,7 @@ if uploaded_file is not None:
     st.session_state['original_image'] = original_image
 
     # Show a spinner while processing
-    with st.spinner('Enhancing image...'):
+    with st.spinner('Applying magic to your image...'):
         # Simulate processing time
         time.sleep(2)
         # Enhance the image
