@@ -5,13 +5,12 @@ import cv2
 from io import BytesIO
 
 # Function to measure parameters
-def measure_parameters( image,image_path=None):
-    # image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-    image = cv2.imread(image, cv2.IMREAD_GRAYSCALE)
-    brightness = np.mean(image)
-    contrast = image.std()
-    sharpness = cv2.Laplacian(image, cv2.CV_64F).var()
-    blurness = cv2.Laplacian(image, cv2.CV_64F).var()
+def measure_parameters(image_np):
+    image_gray = cv2.cvtColor(image_np, cv2.COLOR_BGR2GRAY)
+    brightness = np.mean(image_gray)
+    contrast = image_gray.std()
+    sharpness = cv2.Laplacian(image_gray, cv2.CV_64F).var()
+    blurness = cv2.Laplacian(image_gray, cv2.CV_64F).var()
     return blurness, brightness, contrast, sharpness
 
 def get_image_category(brightness):
@@ -26,14 +25,8 @@ def enhance_image_adaptive(image):
     # Convert to numpy array for measurement
     image_np = np.array(image)
 
-    # Save the image to a temporary buffer for OpenCV processing
-    temp_buffer = BytesIO()
-    image.save(temp_buffer, format='JPEG')
-    temp_buffer.seek(0)
-    image_path = temp_buffer
-
     # Calculate original measurements
-    blurness, brightness, contrast, sharpness = measure_parameters(image= image)
+    blurness, brightness, contrast, sharpness = measure_parameters(image_np)
 
     # Determine image category
     category = get_image_category(brightness)
