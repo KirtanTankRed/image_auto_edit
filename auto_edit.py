@@ -6,6 +6,22 @@ from io import BytesIO
 import time
 import requests 
 
+#----CSS-----
+# Custom CSS for lighter background
+st.markdown("""
+    <style>
+    .stApp {
+        background-color: #f0f0f0;
+    }
+    .stImage {
+        background-color: #ffffff;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+#---CSS OVER-----
+
 # Function to measure parameters
 def measure_parameters(image_np):
     image_gray = cv2.cvtColor(image_np, cv2.COLOR_BGR2GRAY)
@@ -98,14 +114,12 @@ st.header('Upload an image to start enhancing!')
 # Sidebar
 
 # Fetch and display image from GitHub in sidebar
-# response = requests.get('https://github.com/KirtanTankRed/image_auto_edit/blob/main/source/Red_logo_transparent.png')
-# ithub_image_url = ''
 try:
     response = requests.get('https://github.com/KirtanTankRed/image_auto_edit/blob/main/source/Red_logo_transparent.png?raw=true')
     response.raise_for_status()  # Check if the request was successful
     image_data = BytesIO(response.content)
     sidebar_image = Image.open(image_data)
-    st.sidebar.image(sidebar_image, caption='Image from GitHub')
+    st.sidebar.image(sidebar_image)
 except (requests.exceptions.RequestException, UnidentifiedImageError) as e:
     st.sidebar.error(f"Failed to load image from GitHub: {e}")
 
