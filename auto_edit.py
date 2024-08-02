@@ -60,11 +60,20 @@ def enhance_image_adaptive(image):
     enhancer_sharpness = ImageEnhance.Sharpness(contrast_image)
     sharp_image = enhancer_sharpness.enhance(sharpness_factor)
 
-    return sharp_image
+    # Convert the enhanced image back to NumPy array for HDR enhancement
+    sharp_image_np = np.array(sharp_image)
+
+    # Apply HDR enhancement
+    hdr_image_np = cv2.detailEnhance(sharp_image_np, sigma_s=10, sigma_r=0.15)
+
+    # Convert back to PIL Image for displaying
+    hdr_image = Image.fromarray(cv2.cvtColor(hdr_image_np, cv2.COLOR_BGR2RGB))
+
+    return hdr_image
 
 # Streamlit app
-st.title('Adaptive Image Enhancement')
-st.write('Upload an image to enhance it dynamically.')
+st.title('Adaptive Image Enhancement with HDR')
+st.write('Upload an image to enhance it dynamically with HDR.')
 
 # File upload
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
@@ -78,4 +87,4 @@ if uploaded_file is not None:
     enhanced_image = enhance_image_adaptive(original_image)
 
     # Display the enhanced image
-    st.image(enhanced_image, caption='Enhanced Image', use_column_width=True)
+    st.image(enhanced_image, caption='Enhanced Image with HDR', use_column_width=True)
