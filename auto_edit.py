@@ -91,11 +91,10 @@ if 'enhanced_image' not in st.session_state:
     st.session_state['enhanced_image'] = None
 
 # Streamlit app
-st.title('Smart Adaptive Image Enhancement')
-st.write('Upload an image to enhance it')
+st.title('Smart Adaptive Image Enhancer')
+st.write('Upload an image to start enhancing!')
 
 # Sidebar for clearing images
-st.sidebar.header('Side Panel')
 if st.sidebar.button('Clear Images'):
     st.session_state['original_image'] = None
     st.session_state['enhanced_image'] = None
@@ -129,10 +128,3 @@ if st.session_state['original_image'] and st.session_state['enhanced_image']:
 
     # Popup reminder to clear images
     st.sidebar.warning('Remember to clear the images after reviewing to save memory.')
-
-# Provide an option to clear the images after displaying the results
-if st.session_state['original_image'] or st.session_state['enhanced_image']:
-    if st.sidebar.button('Clear Images After Viewing'):
-        st.session_state['original_image'] = None
-        st.session_state['enhanced_image'] = None
-        st.sidebar.success('Images cleared successfully.')
