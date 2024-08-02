@@ -25,6 +25,9 @@ def enhance_image_adaptive(image):
     # Convert to numpy array for measurement
     image_np = np.array(image)
 
+    # Ensure the image is in RGB format for OpenCV processing
+    image_np = cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR)
+
     # Calculate original measurements
     blurness, brightness, contrast, sharpness = measure_parameters(image_np)
 
@@ -63,11 +66,17 @@ def enhance_image_adaptive(image):
     # Convert the enhanced image back to NumPy array for HDR enhancement
     sharp_image_np = np.array(sharp_image)
 
+    # Ensure the image is in BGR format for OpenCV processing
+    sharp_image_np = cv2.cvtColor(sharp_image_np, cv2.COLOR_RGB2BGR)
+
     # Apply HDR enhancement
     hdr_image_np = cv2.detailEnhance(sharp_image_np, sigma_s=10, sigma_r=0.15)
 
+    # Convert back to RGB format for displaying
+    hdr_image_np = cv2.cvtColor(hdr_image_np, cv2.COLOR_BGR2RGB)
+
     # Convert back to PIL Image for displaying
-    hdr_image = Image.fromarray(cv2.cvtColor(hdr_image_np, cv2.COLOR_BGR2RGB))
+    hdr_image = Image.fromarray(hdr_image_np)
 
     return hdr_image
 
@@ -81,10 +90,15 @@ uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png
 if uploaded_file is not None:
     # Display the original image
     original_image = Image.open(uploaded_file)
-    st.image(original_image, caption='Original Image', use_column_width=True)
 
     # Enhance the image
     enhanced_image = enhance_image_adaptive(original_image)
 
-    # Display the enhanced image
-    st.image(enhanced_image, caption='Enhanced Image with HDR', use_column_width=True)
+    # Display the original and enhanced images side by side
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.image(original_image, caption='Original Image', use_column_width=True)
+
+    with col2:
+        st.image(enhanced_image, caption='Enhanced Image with HDR', use_column_width=True)
