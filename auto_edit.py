@@ -91,8 +91,8 @@ if 'enhanced_image' not in st.session_state:
     st.session_state['enhanced_image'] = None
 
 # Streamlit app
-st.title('Adaptive Image Enhancement with HDR and Denoising')
-st.write('Upload an image to enhance it dynamically with HDR and slight denoising.')
+st.title('Smart Adaptive Image Enhancement')
+st.write('Upload an image to enhance it')
 
 # Sidebar for clearing images
 st.sidebar.header('Side Panel')
