@@ -77,14 +77,14 @@ def enhance_image_adaptive(image):
     # Apply slight denoising for a smooth overall image
     denoised_image_np = cv2.fastNlMeansDenoisingColored(hdr_image_np, None, 10, 10, 7, 21)
 
-    # Apply color balance correction
-    alpha = 1.3  # Simple contrast control
-    beta = 20    # Simple brightness control
-    color_corrected_image_np = cv2.convertScaleAbs(denoised_image_np, alpha=alpha, beta=beta)
+    # # Apply color balance correction
+    # alpha = 1.3  # Simple contrast control
+    # beta = 20    # Simple brightness control
+    # color_corrected_image_np = cv2.convertScaleAbs(denoised_image_np, alpha=alpha, beta=beta)
 
     # Convert to HSV to increase saturation
     hsv_image = cv2.cvtColor(color_corrected_image_np, cv2.COLOR_BGR2HSV)
-    hsv_image[:, :, 1] = cv2.add(hsv_image[:, :, 1], 25)  # Increase saturation by 25
+    hsv_image[:, :, 1] = cv2.add(hsv_image[:, :, 1], 10)  # Increase saturation by 25
     final_image_np = cv2.cvtColor(hsv_image, cv2.COLOR_HSV2BGR)
 
     # Convert back to RGB format for displaying
