@@ -39,8 +39,8 @@ if 'enhanced_image' not in st.session_state:
     st.session_state['enhanced_image'] = None
 
 # Streamlit app
-st.title('HDR Image Enhancer with Smoothing')
-st.header('Upload an image to apply HDR enhancement and smoothing!')
+st.title('Smart Image Enhancer')
+st.header('Upload an image to start enhancing!')
 
 # Sidebar
 
@@ -70,7 +70,7 @@ if uploaded_file is not None:
     st.session_state['original_image'] = original_image
 
     # Show a spinner while processing
-    with st.spinner('Applying HDR enhancement and smoothing to your image 🪄'):
+    with st.spinner('Applying magic to your image 🪄'):
         # Simulate processing time
         time.sleep(2)
         # Enhance the image
@@ -85,7 +85,7 @@ if st.session_state['original_image'] and st.session_state['enhanced_image']:
         st.image(st.session_state['original_image'], caption='Original Image 🖼️', use_column_width=True)
 
     with col2:
-        st.image(st.session_state['enhanced_image'], caption='Enhanced Image with HDR and Smoothing ✨', use_column_width=True)
+        st.image(st.session_state['enhanced_image'], caption='Enhanced Image ✨', use_column_width=True)
 
     # Popup reminder to clear images
     st.sidebar.warning('ℹ️ Remember to clear the images after reviewing to manage memory!')
