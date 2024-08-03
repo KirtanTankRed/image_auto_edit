@@ -84,7 +84,7 @@ def enhance_image_adaptive(image):
 
     # Convert to HSV to increase saturation
     hsv_image = cv2.cvtColor(color_corrected_image_np, cv2.COLOR_BGR2HSV)
-    hsv_image[:, :, 1] = cv2.add(hsv_image[:, :, 1], 25)  # Increase saturation by 25
+    hsv_image[:, :, 1] = cv2.add(hsv_image[:, :, 1], 15)  # Increase saturation by 25
     final_image_np = cv2.cvtColor(hsv_image, cv2.COLOR_HSV2BGR)
 
     # Convert back to RGB format for displaying
