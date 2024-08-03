@@ -1,11 +1,10 @@
 import streamlit as st
-from PIL import Image, ImageEnhance
+from PIL import Image, ImageEnhance, UnidentifiedImageError
 import numpy as np
 import cv2
 from io import BytesIO
 import time
-import requests 
-
+import requests
 
 # Function to measure parameters
 def measure_parameters(image_np):
@@ -78,13 +77,23 @@ def enhance_image_adaptive(image):
     # Apply slight denoising for a smooth overall image
     denoised_image_np = cv2.fastNlMeansDenoisingColored(hdr_image_np, None, 10, 10, 7, 21)
 
+    # Apply color balance correction
+    alpha = 1.3  # Simple contrast control
+    beta = 20    # Simple brightness control
+    color_corrected_image_np = cv2.convertScaleAbs(denoised_image_np, alpha=alpha, beta=beta)
+
+    # Convert to HSV to increase saturation
+    hsv_image = cv2.cvtColor(color_corrected_image_np, cv2.COLOR_BGR2HSV)
+    hsv_image[:, :, 1] = cv2.add(hsv_image[:, :, 1], 25)  # Increase saturation by 25
+    final_image_np = cv2.cvtColor(hsv_image, cv2.COLOR_HSV2BGR)
+
     # Convert back to RGB format for displaying
-    denoised_image_np = cv2.cvtColor(denoised_image_np, cv2.COLOR_BGR2RGB)
+    final_image_np = cv2.cvtColor(final_image_np, cv2.COLOR_BGR2RGB)
 
     # Convert back to PIL Image for displaying
-    denoised_image = Image.fromarray(denoised_image_np)
+    final_image = Image.fromarray(final_image_np)
 
-    return denoised_image
+    return final_image
 
 # Initialize session state for image storage
 if 'original_image' not in st.session_state:
@@ -104,17 +113,10 @@ try:
     response.raise_for_status()  # Check if the request was successful
     image_data = BytesIO(response.content)
     sidebar_image = Image.open(image_data)
-    st.sidebar.image(sidebar_image)
-    # sidebar_image_html = f'''
-    # <div style="background-color: #f0f0f0; padding: 10px; border-radius: 10px;">
-    #     <img src="data:image/jpeg;base64,{response.content.decode('latin1')}" alt="Sidebar Image" style="display: block; margin-left: auto; margin-right: auto;">
-    # </div>
-    # '''
-    # st.sidebar.markdown(sidebar_image_html, unsafe_allow_html=True)
+    st.sidebar.image(sidebar_image, caption='Sample Image from GitHub', use_column_width=True)
 except (requests.exceptions.RequestException, UnidentifiedImageError) as e:
     st.sidebar.error(f"Failed to load image from GitHub: {e}")
 
-    
 st.sidebar.title('🎛️ Side Panel')
 st.sidebar.header('🗑️ Click the below button to clear images')
 if st.sidebar.button('Clear Images'):
