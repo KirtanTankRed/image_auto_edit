@@ -1,11 +1,10 @@
 import streamlit as st
-from PIL import Image, ImageEnhance
+from PIL import Image, ImageEnhance, UnidentifiedImageError
 import numpy as np
 import cv2
 from io import BytesIO
 import time
-import requests 
-
+import requests
 
 # Function to measure parameters
 def measure_parameters(image_np):
@@ -78,13 +77,18 @@ def enhance_image_adaptive(image):
     # Apply slight denoising for a smooth overall image
     denoised_image_np = cv2.fastNlMeansDenoisingColored(hdr_image_np, None, 10, 10, 7, 21)
 
+    # Apply color balance correction
+    alpha = 1.3  # Simple contrast control
+    beta = 20    # Simple brightness control
+    color_corrected_image_np = cv2.convertScaleAbs(denoised_image_np, alpha=alpha, beta=beta)
+
     # Convert back to RGB format for displaying
-    denoised_image_np = cv2.cvtColor(denoised_image_np, cv2.COLOR_BGR2RGB)
+    final_image_np = cv2.cvtColor(color_corrected_image_np, cv2.COLOR_BGR2RGB)
 
     # Convert back to PIL Image for displaying
-    denoised_image = Image.fromarray(denoised_image_np)
+    final_image = Image.fromarray(final_image_np)
 
-    return denoised_image
+    return final_image
 
 # Initialize session state for image storage
 if 'original_image' not in st.session_state:
@@ -93,34 +97,25 @@ if 'enhanced_image' not in st.session_state:
     st.session_state['enhanced_image'] = None
 
 # Streamlit app
-st.title('Smart Adaptive Image Enhancer')
-st.header('Upload an image to start enhancing!')
+st.title('Adaptive Image Enhancement with HDR and Denoising')
+st.write('Upload an image to enhance it dynamically with HDR and slight denoising.')
 
-# Sidebar
-
-# Fetch and display image from GitHub in sidebar
-try:
-    response = requests.get('https://github.com/KirtanTankRed/image_auto_edit/blob/main/source/Red_logo_transparent.png?raw=true')
-    response.raise_for_status()  # Check if the request was successful
-    image_data = BytesIO(response.content)
-    sidebar_image = Image.open(image_data)
-    st.sidebar.image(sidebar_image)
-    # sidebar_image_html = f'''
-    # <div style="background-color: #f0f0f0; padding: 10px; border-radius: 10px;">
-    #     <img src="data:image/jpeg;base64,{response.content.decode('latin1')}" alt="Sidebar Image" style="display: block; margin-left: auto; margin-right: auto;">
-    # </div>
-    # '''
-    # st.sidebar.markdown(sidebar_image_html, unsafe_allow_html=True)
-except (requests.exceptions.RequestException, UnidentifiedImageError) as e:
-    st.sidebar.error(f"Failed to load image from GitHub: {e}")
-
-    
-st.sidebar.title('🎛️ Side Panel')
-st.sidebar.header('🗑️ Click the below button to clear images')
+# Sidebar for clearing images
 if st.sidebar.button('Clear Images'):
     st.session_state['original_image'] = None
     st.session_state['enhanced_image'] = None
     st.sidebar.success('Images cleared successfully.')
+
+# Fetch and display image from GitHub in sidebar
+github_image_url = 'https://github.com/KirtanTankRed/image_auto_edit/blob/main/sample_images/sample_image.jpg?raw=true'
+try:
+    response = requests.get(github_image_url)
+    response.raise_for_status()  # Check if the request was successful
+    image_data = BytesIO(response.content)
+    sidebar_image = Image.open(image_data)
+    st.sidebar.image(sidebar_image, caption='Sample Image from GitHub', use_column_width=True)
+except (requests.exceptions.RequestException, UnidentifiedImageError) as e:
+    st.sidebar.error(f"Failed to load image from GitHub: {e}")
 
 # File upload
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
@@ -131,7 +126,7 @@ if uploaded_file is not None:
     st.session_state['original_image'] = original_image
 
     # Show a spinner while processing
-    with st.spinner('Applying magic to your image 🪄'):
+    with st.spinner('Enhancing image...'):
         # Simulate processing time
         time.sleep(2)
         # Enhance the image
@@ -143,13 +138,10 @@ if st.session_state['original_image'] and st.session_state['enhanced_image']:
     col1, col2 = st.columns(2)
 
     with col1:
-        st.image(st.session_state['original_image'], caption='Original Image 🖼️', use_column_width=True)
+        st.image(st.session_state['original_image'], caption='Original Image', use_column_width=True)
 
     with col2:
-        st.image(st.session_state['enhanced_image'], caption='Enhanced Image with HDR and Denoising ✨', use_column_width=True)
+        st.image(st.session_state['enhanced_image'], caption='Enhanced Image with HDR and Denoising', use_column_width=True)
 
-    # Popup reminder to clear images
-    st.sidebar.warning('ℹ️ Remember to clear the images after reviewing to manage memory, failing to do so can risk to insufficient memory!')
-st.sidebar.warning("""⚠️ This is a prototype for demonstration purposes and is not at production capacity which offers limited trials.          
-🔧 In case of breakdown, please reboot the app or contact the developer.""")
-
+    # Popup reminder
+    st.info("Reminder: Clear the image folder to avoid running out of memory.")
