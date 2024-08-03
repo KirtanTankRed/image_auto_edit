@@ -6,7 +6,7 @@ from io import BytesIO
 import time
 import requests 
 
-# Function to apply HDR enhancement
+# Function to apply HDR enhancement with smoothing and denoising
 def enhance_image_hdr(image):
     try:
         # Convert to numpy array for OpenCV processing
@@ -18,15 +18,18 @@ def enhance_image_hdr(image):
         # Apply HDR enhancement
         hdr_image_np = cv2.detailEnhance(image_np, sigma_s=10, sigma_r=0.15)
 
+        # Apply slight denoising for a smooth overall image
+        denoised_image_np = cv2.fastNlMeansDenoisingColored(hdr_image_np, None, 10, 10, 7, 21)
+
         # Convert back to RGB format for displaying
-        hdr_image_np = cv2.cvtColor(hdr_image_np, cv2.COLOR_BGR2RGB)
+        denoised_image_np = cv2.cvtColor(denoised_image_np, cv2.COLOR_BGR2RGB)
 
         # Convert back to PIL Image for displaying
-        hdr_image = Image.fromarray(hdr_image_np)
+        denoised_image = Image.fromarray(denoised_image_np)
 
-        return hdr_image
+        return denoised_image
     except Exception as e:
-        st.error(f"Error during HDR enhancement: {e}")
+        st.error(f"Error during enhancement: {e}")
         return image
 
 # Initialize session state for image storage
@@ -36,8 +39,8 @@ if 'enhanced_image' not in st.session_state:
     st.session_state['enhanced_image'] = None
 
 # Streamlit app
-st.title('HDR Image Enhancer')
-st.header('Upload an image to apply HDR enhancement!')
+st.title('HDR Image Enhancer with Smoothing')
+st.header('Upload an image to apply HDR enhancement and smoothing!')
 
 # Sidebar
 
@@ -67,7 +70,7 @@ if uploaded_file is not None:
     st.session_state['original_image'] = original_image
 
     # Show a spinner while processing
-    with st.spinner('Applying HDR enhancement to your image 🪄'):
+    with st.spinner('Applying HDR enhancement and smoothing to your image 🪄'):
         # Simulate processing time
         time.sleep(2)
         # Enhance the image
@@ -82,7 +85,7 @@ if st.session_state['original_image'] and st.session_state['enhanced_image']:
         st.image(st.session_state['original_image'], caption='Original Image 🖼️', use_column_width=True)
 
     with col2:
-        st.image(st.session_state['enhanced_image'], caption='HDR Enhanced Image ✨', use_column_width=True)
+        st.image(st.session_state['enhanced_image'], caption='Enhanced Image with HDR and Smoothing ✨', use_column_width=True)
 
     # Popup reminder to clear images
     st.sidebar.warning('ℹ️ Remember to clear the images after reviewing to manage memory!')
