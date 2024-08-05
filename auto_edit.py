@@ -50,7 +50,7 @@ try:
     response.raise_for_status()  # Check if the request was successful
     image_data = BytesIO(response.content)
     sidebar_image = Image.open(image_data)
-    st.sidebar.image(sidebar_image, caption='♦️ RED SOFTWARE', use_column_width=True)
+    st.sidebar.image(sidebar_image, caption='🔶 RED SOFTWARE', use_column_width=True)
 except (requests.exceptions.RequestException, UnidentifiedImageError) as e:
     st.sidebar.error(f"Failed to load image from GitHub: {e}")
 
