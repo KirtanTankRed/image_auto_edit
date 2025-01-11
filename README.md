@@ -1,4 +1,4 @@
-# Smart Image Enhancer
+# Image Auto Edit
 
 A simple and intuitive web application that allows users to upload images and enhance them using advanced HDR (High Dynamic Range) processing with denoising and smoothing. Built using **Streamlit**, this app provides side-by-side comparisons of original and enhanced images, offering a seamless experience for image improvement.
 
